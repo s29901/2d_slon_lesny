@@ -17,6 +17,7 @@ public class Target : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
+    
     void Update()
     {
         // Получаем позицию мыши в мире

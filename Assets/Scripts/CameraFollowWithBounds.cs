@@ -17,6 +17,14 @@ public class CameraFollowWithBounds : MonoBehaviour
         cameraHalfWidth = Camera.main.orthographicSize * Camera.main.aspect;
     }
 
+  /*  void Update()
+    {
+        if (player != null)
+        {
+            // Камера следует за игроком только по оси X
+            transform.position = new Vector3(player.position.x + offsetX, transform.position.y, transform.position.z);
+        }
+    }*/ 
     void LateUpdate()
     {
         if (player != null)
