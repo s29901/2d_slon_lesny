@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerMemory : MonoBehaviour
+static class PlayerMemory 
 {
     public static Vector3 LastPosition;
     public static bool HasSavedPosition = false;
@@ -10,5 +10,6 @@ public class PlayerMemory : MonoBehaviour
     {
         LastPosition = pos;
         HasSavedPosition = true;
+        Debug.Log("!!! СОХРАНИЛИ ПОЗИЦИЮ: " + pos);
     }
 }

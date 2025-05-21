@@ -3,15 +3,16 @@ using UnityEngine.SceneManagement;
 
 public class return_1scene : MonoBehaviour
 {
-    public GameObject player;
 
+    public GameObject Player;
     public void NextScene()
     {
-        if (player != null)
+        Debug.Log("NextScene() вызван");
+        if (Player != null)
         {
-            PlayerMemory.Save(player.transform.position);
+            PlayerMemory.Save(Player.transform.position);
+            Debug.Log("СОХРАНЯЕМ ПОЗИЦИЮ: " + Player.transform.position);
         }
-
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 

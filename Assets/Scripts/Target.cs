@@ -13,8 +13,11 @@ public class Target : MonoBehaviour
 
     void Start()
     {
-        followSpot = transform.position;
+       followSpot = transform.position;
         rb = GetComponent<Rigidbody2D>();
+       //followSpot = PlayerMemory.HasSavedPosition ? PlayerMemory.LastPosition : transform.position;
+
+       
     }
 
     
@@ -32,18 +35,20 @@ public class Target : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Вычисляем направление движения
-        Vector2 direction = (followSpot - (Vector2)transform.position).normalized;
+        Debug.Log("followSpot: " + followSpot + " | position: " + transform.position);
+        float distance = Vector2.Distance(rb.position, followSpot);
+        float step = speed * Time.fixedDeltaTime;
 
-        // Проверяем расстояние до цели
-        float distance = Vector2.Distance(transform.position, followSpot);
-
-        // Проверяем, не находимся ли мы уже в точке
-        if (distance > 0.05f)
+        if (distance > step)
         {
-            // Перемещаем игрока, используя физику
-            rb.MovePosition(rb.position + direction * speed * Time.fixedDeltaTime);
+            Vector2 direction = (followSpot - rb.position).normalized;
+            rb.MovePosition(rb.position + direction * step);
+        }
+        else
+        {
+            rb.MovePosition(followSpot);
         }
     }
+
 }
 
