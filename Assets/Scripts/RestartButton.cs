@@ -3,14 +3,16 @@ using UnityEngine.SceneManagement;
 
 public class RestartButton : MonoBehaviour
 {
-    [Tooltip("Индекс стартовой сцены в Build Settings (обычно 0)")]
-    public int initialSceneBuildIndex = 2;
+    public int initialSceneBuildIndex = 0;
 
-    /// <summary>
-    /// Загружает самую первую сцену по заданному индексу.
-    /// </summary>
     public void RestartToFirstScene()
     {
+        // «Убиваем» единственный экземпляр
+        if (GameManager.Instance != null)
+            Destroy(GameManager.Instance.gameObject);
+
+        // И грузим сцену, где в Awake создастся новый GameManager
         SceneManager.LoadScene(initialSceneBuildIndex);
     }
+
 }

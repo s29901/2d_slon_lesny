@@ -5,18 +5,16 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    [Header("Настройки костей")]
-    public int totalBonesToCollect = 5;
+    [Header("Имена сцен")]
     public string boneCollectionSceneName = "2_scene";
+    public string elephantSceneName      = "SampleScene";
 
-    [Header("Настройки появления слона")]
-    public string elephantSceneName = "SampleScene";
+    [Header("Префаб слона")]
     public GameObject elephantPrefab;
 
-    public int BonesCount { get; private set; }
-
-    // Флаг, указывающий, что мы действительно собрали кости и должны спавнить слона
-    private bool _readyToSpawnElephant = false;
+    // Внутренние флаги
+    private bool _puzzleCompleted = false;
+    private bool _shouldSpawnElephant = false;
 
     private void Awake()
     {
@@ -25,57 +23,57 @@ public class GameManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+        else Destroy(gameObject);
     }
 
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
-
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     /// <summary>
-    /// Вызывается кнопкой-костью при клике.
+    /// Вызывается, когда пазл полностью собран в 2_scene
     /// </summary>
-    public void AddBone(int amount = 1)
+    public void MarkPuzzleCompleted()
     {
-        // работаем только в сцене сбора
-        if (SceneManager.GetActiveScene().name != boneCollectionSceneName)
-            return;
+        _puzzleCompleted = true;
+    }
+    public void AddBone()
+    {
+        // ничего не делаем, или, если хочешь, просто лог
+        Debug.Log("[GM] AddBone() вызван, но в этой версии логика в BonePuzzleManager");
+    }
 
-        BonesCount += amount;
-        Debug.Log($"[GM] Костей собрано: {BonesCount}/{totalBonesToCollect}");
+    /// <summary>
+    /// Вызывать на кнопку «Назад в музей» в 2_scene
+    /// </summary>
+    public void ReturnToMuseum()
+    {
+        // Устанавливаем флаг только если пазл собран
+        if (_puzzleCompleted)
+            _shouldSpawnElephant = true;
 
-        if (BonesCount >= totalBonesToCollect)
-        {
-            // ставим флаг и переходим в SampleScene
-            _readyToSpawnElephant = true;
-            Debug.Log("[GM] Достигли порога костей, загружаем SampleScene");
-            SceneManager.LoadScene(elephantSceneName);
-        }
+        SceneManager.LoadScene(elephantSceneName);
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log($"[GM] Сцена загружена: {scene.name} (BonesCount={BonesCount}, ready={_readyToSpawnElephant})");
+        // Если вернулись в сцену сбора — сбросим флаг повторного спавна
+        if (scene.name == boneCollectionSceneName)
+        {
+            _shouldSpawnElephant = false;
+        }
 
-        // Спавним только если это SampleScene **и** мы пришли из сбора
-        if (scene.name == elephantSceneName && _readyToSpawnElephant)
+        // Когда загрузили музей
+        if (scene.name == elephantSceneName && _shouldSpawnElephant)
         {
             Vector3 spawnPos = new Vector3(922f, 737f, -6f);
-            Debug.Log($"[GM] Спавню слона в {spawnPos}");
             Instantiate(elephantPrefab, spawnPos, Quaternion.identity);
-
-            // сбросим флаг, чтобы при следующем заходе в SampleScene (например, по кнопке "Начать игру") слон не появлялся
-            _readyToSpawnElephant = false;
+            _shouldSpawnElephant = false;
         }
     }
 }

@@ -2,26 +2,31 @@ using UnityEngine;
 
 public class BonePuzzleManager : MonoBehaviour
 {
-    [Tooltip("Массив cien_1…cien_6 — заранее нарисованных фрагментов")]
+    [Tooltip("Массив ваших фрагментов")]
     public GameObject[] boneSlots;
+
+    private int _collectedCount = 0;
 
     void Start()
     {
-        // прячем все cien_… в начале
         foreach (var slot in boneSlots)
             slot.SetActive(false);
     }
 
     public void CollectBone(int index, GameObject pickedObject)
     {
-        if (index < 0 || index >= boneSlots.Length)
-        {
-            Debug.LogError($"CollectBone: неверный индекс {index}");
-            return;
-        }
-
-        Debug.Log($"CollectBone: показываем slot[{index}] и прячем {pickedObject.name}");
+        if (index < 0 || index >= boneSlots.Length) return;
         boneSlots[index].SetActive(true);
         pickedObject.SetActive(false);
+
+        _collectedCount++;
+        Debug.Log($"[Puzzle] Собрано {_collectedCount}/{boneSlots.Length}");
+
+        if (_collectedCount == boneSlots.Length)
+        {
+            // Сообщаем GameManager, что пазл завершён
+            GameManager.Instance.MarkPuzzleCompleted();
+            Debug.Log("[Puzzle] Пазл собран! Теперь вручную нажмите кнопку «Назад в музей».");
+        }
     }
 }
