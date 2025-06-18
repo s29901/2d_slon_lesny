@@ -23,3 +23,4 @@ public class OpenerInfoTab : MonoBehaviour
         Debug.Log($"[InfoTabOpener] {(isOpen? "Open":"Close")} {infoPanel.name}");
     }
 }
+

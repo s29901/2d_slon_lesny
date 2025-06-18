@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Префаб слона")]
     public GameObject elephantPrefab;
-
+    public bool IsPuzzleCompleted => _puzzleCompleted;
     // Внутренние флаги
     private bool _puzzleCompleted = false;
     private bool _shouldSpawnElephant = false;

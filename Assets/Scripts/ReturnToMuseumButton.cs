@@ -9,14 +9,16 @@ public class ReturnToMuseumButton : MonoBehaviour
     private void Awake()
     {
         _button = GetComponent<Button>();
-
-        // Удаляем все старые (инспекторные) подписки
         _button.onClick.RemoveAllListeners();
 
-        // Подписываем кнопку на метод живого GameManager.Instance
         _button.onClick.AddListener(() =>
         {
+            Debug.Log("[Button] Нажата кнопка возврата в музей");
+
+            if (CursorManager.Instance != null)
+                CursorManager.Instance.SetDefaultCursor();
+
             GameManager.Instance.ReturnToMuseum();
-        });
-    }
-}
+        }); // ← вот тут закрывается AddListener
+    } // ← и вот тут закрывается Awake
+} // ← и это закрывает весь класс

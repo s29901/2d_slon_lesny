@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class InfoTabManager : MonoBehaviour
 {
+ 
     public GameObject duze_info;  
     public GameObject Player; 
     private Transform cam;
@@ -18,8 +19,12 @@ public class InfoTabManager : MonoBehaviour
 
     void LateUpdate()
     {
-        transform.position = new Vector3(cam.position.x, cam.position.y, 0f);
+        if (cam != null)
+        {
+            transform.position = new Vector3(cam.position.x, cam.position.y, 0f);
+        }
     }
+
 
     // Вызывается, например, при нажатии на кнопку
     public void ToggleInfoTab()
